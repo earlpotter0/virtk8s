@@ -8,7 +8,6 @@ Vagrant.configure("2") do |config|
   config.vm.box = "ubuntu/xenial64"
   config.vm.provision :shell, path: "bootstrap.sh"
   config.vm.disk :disk, size: "40GB", primary: true
-#  config.vm.synced_folder "../common_files", "/config_files"
   config.vm.provider "virtualbox" do |v|
     v.memory = "#{MEMORY}"
     v.cpus = "#{CPUS}"
