@@ -17,7 +17,7 @@ Vagrant.configure("2") do |config|
     master.vm.hostname = "c1-master1"
     master.vm.network "private_network", ip: "#{NETWORK}0"
     master.vm.provision "ansible_local" do |ansible|
-      ansible.playbook = "k8s-playbook.yaml"
+      ansible.playbook = "install-k8s-playbook.yaml"
     end
   end
 
@@ -25,6 +25,9 @@ Vagrant.configure("2") do |config|
     config.vm.define "node-#{i}" do |node|
       node.vm.hostname = "c1-node#{i}"
       node.vm.network "private_network", ip: "#{NETWORK}#{i}"
+      node.vm.provision "ansible_local" do |ansible|
+        ansible.playbook = "install-k8s-playbook.yaml"
+      end
     end
   end
 end
