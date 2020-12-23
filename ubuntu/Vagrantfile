@@ -17,11 +17,12 @@ Vagrant.configure("2") do |config|
   config.vm.define "master" do |master|
     master.vm.hostname = "c1-master1"
     master.vm.network "private_network", ip: "#{NETWORK}0"
-    master.vm.provision :ansible_local do |ansible|
+    master.vm.provision :ansible do |ansible|
       ansible.verbose = "v"
       ansible.playbook = "install-k8s-master-playbook.yaml"
     end
-    master.vm.provision :ansible_local do |ansible|
+    master.vm.provision :ansible do |ansible|
+      ansible.verbose = "v"
       ansible.playbook = "configure-k8s-master-playbook.yaml"
     end
   end

@@ -1,0 +1,25 @@
+
+IMAGE_NAME = "centos/8"
+NETWORK = "10.5.5.12"
+MEMORY = "4096"
+CPUS = "2"
+N = 3
+
+
+Vagrant.configure("2") do |config|
+  config.vm.box = IMAGE_NAME
+  config.vm.disk :disk, size: "40GB", primary: true
+  config.vm.provider "virtualbox" do |v|
+    v.memory = "#{MEMORY}"
+    v.cpus = "#{CPUS}"
+  end
+
+  config.vm.define "master" do |master|
+    master.vm.hostname = "c1-master1"
+    master.vm.network "private_network", ip: "#{NETWORK}0"
+    master.vm.provision :ansible do |ansible|
+      ansible.verbose = "v"
+      ansible.playbook = "install-k8s-master-playbook.yaml"
+    end
+  end
+end
