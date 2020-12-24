@@ -2,7 +2,6 @@
 - hosts: all
   become: yes
 
-
   tasks:
 
   - name: Copy etc-hosts file
@@ -31,11 +30,24 @@
       policy: targeted
       state: permissive
 
-  - name: Configure iptables to see bridged traffic
-    shell: |
-      echo "net.bridge.bridge-nf-call-iptables=1" >> /etc/sysctl.conf
-      echo "net.ipv4.ip_forward=1" >> /etc/sysctl.conf
-      sysctl -p
+  - name: Modprobe br_netfilter
+    modprobe: 
+      name: br_netfilter
+      state: present
+
+  - name: Set bridge iptables in sysctl
+    sysctl:
+      name: net.bridge.bridge-nf-call-iptables
+      value: 1
+      state: present
+      reload: yes
+
+  - name: Set ip_forward
+    sysctl:
+      name: net.ipv4.ip_forward
+      value: 1
+      state: present
+      reload: yes
 
   - name: Configure firewall - 6443
     ansible.posix.firewalld:
@@ -47,7 +59,7 @@
     ansible.posix.firewalld:
       port: 2379-2380/tcp
       permanent: yes
-      state: enabled
+      state: enabled      
 
   - name: Configure firewall - 10250-10252
     ansible.posix.firewalld:
@@ -55,3 +67,8 @@
       permanent: yes
       state: enabled
 
+  - name: Enable firewall
+    systemd:
+      name: firewalld
+      state: started
+      enabled: yes
