@@ -19,7 +19,7 @@ Vagrant.configure("2") do |config|
     master.vm.network "private_network", ip: "#{NETWORK}0"
     master.vm.provision :ansible do |ansible|
       ansible.verbose = "v"
-      ansible.playbook = "install-k8s-master-playbook.yaml"
+      ansible.playbook = "master-pre-flight-playbook.yaml"
     end
   end
 end

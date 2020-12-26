@@ -4,6 +4,11 @@
 
   tasks:
 
+  - name: Upgrade all packages
+    dnf:
+      name: "*"
+      state: latest
+
   - name: Copy etc-hosts file
     copy:
       src: hosts
@@ -72,3 +77,56 @@
       name: firewalld
       state: started
       enabled: yes
+
+  - name: Enable EPEL
+    dnf: 
+      name: epel-release
+      state: latest
+
+  - name: Install tools
+    dnf:
+      name: 
+        - yum-utils
+        - device-mapper-persistent-data
+        - lvm2
+        - vim
+
+  - name: download docker installer
+    get_url:
+      url: https://get.docker.com/
+      dest: /root/install_docker.sh
+      mode: 0700
+  
+  - name: Install Docker
+    shell: /root/install_docker.sh
+
+  - name: Remove the Docker installer file.
+    file:
+      state: absent
+      path: /root/install_docker.sh
+
+  - name: Create etc-docker directory
+    file: 
+      path: /etc/docker/
+      state: directory
+
+  - name: Copy docker daemon setup
+    copy:
+      src: daemon.json
+      dest: /etc/docker/daemon.json
+      owner: root
+      group: root
+      mode: '0644'
+
+  - name: Enable the Docker daemon in systemd
+    systemd:
+      name: docker
+      enabled: yes
+      state: started
+      masked: no
+
+  - name: Add vagrant user to docker
+    user:
+      name: vagrant
+      groups: docker,wheel
+      append: yes

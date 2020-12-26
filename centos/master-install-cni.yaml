@@ -1,0 +1,10 @@
+---
+- name: Install CNI on Master
+  hosts: all
+  become: yes
+
+  tasks:
+    
+  
+
+
