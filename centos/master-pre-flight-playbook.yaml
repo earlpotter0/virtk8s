@@ -83,6 +83,16 @@
       name: epel-release
       state: latest
 
+  - name: Add Docker repo
+    get_url:
+      url: https://download.docker.com/linux/centos/docker-ce.repo
+      dest: /etc/yum.repos.d/docker-ce.repo
+
+  - name: Import Docker rpm key
+    rpm_key:
+      state: present
+      key: https://download.docker.com/linux/centos/gpg
+      
   - name: Install tools
     dnf:
       name: 
@@ -90,20 +100,7 @@
         - device-mapper-persistent-data
         - lvm2
         - vim
-
-  - name: download docker installer
-    get_url:
-      url: https://get.docker.com/
-      dest: /root/install_docker.sh
-      mode: 0700
-  
-  - name: Install Docker
-    shell: /root/install_docker.sh
-
-  - name: Remove the Docker installer file.
-    file:
-      state: absent
-      path: /root/install_docker.sh
+        - docker-ce
 
   - name: Create etc-docker directory
     file: 
@@ -125,7 +122,7 @@
       state: started
       masked: no
 
-  - name: Add vagrant user to docker
+  - name: Add vagrant user to docker and wheel
     user:
       name: vagrant
       groups: docker,wheel
