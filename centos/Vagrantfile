@@ -21,5 +21,9 @@ Vagrant.configure("2") do |config|
       ansible.verbose = "v"
       ansible.playbook = "master-pre-flight-playbook.yaml"
     end
+    master.vm.provision :ansible do |ansible|
+      ansible.verbose = "v"
+      ansible.playbook = "master-install-cni.yaml"
+    end
   end
 end
