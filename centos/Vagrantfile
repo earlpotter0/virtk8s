@@ -19,11 +19,26 @@ Vagrant.configure("2") do |config|
     master.vm.network "private_network", ip: "#{NETWORK}0"
     master.vm.provision :ansible do |ansible|
       ansible.verbose = "v"
-      ansible.playbook = "master-pre-flight-playbook.yaml"
+      ansible.playbook = "master-pre-flight.yaml"
     end
     master.vm.provision :ansible do |ansible|
       ansible.verbose = "v"
-      ansible.playbook = "master-install-cni.yaml"
+      ansible.playbook = "master-install-configure-cri.yaml"
+    end
+    master.vm.provision :ansible do |ansible|
+      ansible.verbose = "v"
+      ansible.playbook = "master-install-configure-k8s.yaml"
     end
   end
+
+  # (1..N).each do |i|
+  #   config.vm.define "node-#{i}" do |node|
+  #     node.vm.hostname = "c1-node#{i}"
+  #     node.vm.network "private_network", ip: "#{NETWORK}#{i}"
+  #     node.vm.provision "ansible_local" do |ansible|
+  #       ansible.verbose = "v"
+  #       ansible.playbook = "install-k8s-playbook.yaml"
+  #     end
+  #   end
+  # end
 end

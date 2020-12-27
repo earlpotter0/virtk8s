@@ -19,6 +19,7 @@
     dnf:
       name: 
         - docker-ce
+      state: present
 
   - name: Create etc-docker directory
     file: 
