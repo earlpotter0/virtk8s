@@ -1,10 +1,10 @@
 ---
 - hosts: all
-  become: yes
 
   tasks:
   
   - name: Setup K8s repo
+    become: yes
     copy:
       src: kubernetes.repo
       dest: /etc/yum.repos.d/kubernetes.repo
@@ -13,6 +13,7 @@
       mode: 0644
 
   - name: Install k8s
+    become: yes
     dnf:
       name: 
         - kubelet
@@ -21,6 +22,7 @@
       disable_excludes: all
   
   - name: Enable Kubelet in systemd
+    become: yes
     systemd:
       name: kubelet
       enabled: yes
@@ -28,9 +30,11 @@
       masked: no
 
   - name: Initialize Kubelet
+    become: yes
     shell: kubeadm init --pod-network-cidr=192.168.0.0/16 --apiserver-advertise-address 10.5.5.120
 
   - name: Create kube-config
+    become: yes
     file:
       path: /home/vagrant/.kube
       state: directory
@@ -39,6 +43,7 @@
       mode: 0755
 
   - name: Copy admin.conf to .kube/config
+    become: yes
     copy:
       src: /etc/kubernetes/admin.conf
       dest: /home/vagrant/.kube/config
@@ -48,7 +53,7 @@
       mode: '0644'
 
   - name: install cni
+    become: yes
+    become_user: vagrant
     command: kubectl apply -f /vagrant/calico.yaml
-    environment:
-      KUBECONFIG: /etc/kubernetes/admin.conf
     

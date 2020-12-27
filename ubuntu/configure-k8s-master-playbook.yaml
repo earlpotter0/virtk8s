@@ -54,7 +54,8 @@
       url: https://docs.projectcalico.org/v3.15/manifests/calico.yaml
       dest: /home/vagrant/calico.yaml
 
-  - name: Deploy pod network
-    command: kubectl apply -f /home/vagrant/calico.yaml
-    run_once: yes
+  - name: install cni
+    command: kubectl apply -f /vagrant/calico.yaml
+    environment:
+      KUBECONFIG: /etc/kubernetes/admin.conf
 
