@@ -1,0 +1,48 @@
+---
+- name: Install CNI on Nodes
+  hosts: all
+  become: yes
+
+  tasks:
+    
+  - name: Add Docker repo
+    get_url:
+      url: https://download.docker.com/linux/centos/docker-ce.repo
+      dest: /etc/yum.repos.d/docker-ce.repo
+
+  - name: Import Docker rpm key
+    rpm_key:
+      state: present
+      key: https://download.docker.com/linux/centos/gpg
+
+  - name: Install docker
+    dnf:
+      name: 
+        - docker-ce
+      state: present
+
+  - name: Create etc-docker directory
+    file: 
+      path: /etc/docker/
+      state: directory
+
+  - name: Copy docker daemon setup
+    copy:
+      src: daemon.json
+      dest: /etc/docker/daemon.json
+      owner: root
+      group: root
+      mode: '0644'
+
+  - name: Enable the Docker daemon in systemd
+    systemd:
+      name: docker
+      enabled: yes
+      state: started
+      masked: no
+
+  - name: Add vagrant user to docker
+    user:
+      name: vagrant
+      groups: docker
+      append: yes        

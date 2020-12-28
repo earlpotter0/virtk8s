@@ -31,14 +31,22 @@ Vagrant.configure("2") do |config|
     end
   end
 
-  # (1..N).each do |i|
-  #   config.vm.define "node-#{i}" do |node|
-  #     node.vm.hostname = "c1-node#{i}"
-  #     node.vm.network "private_network", ip: "#{NETWORK}#{i}"
-  #     node.vm.provision "ansible_local" do |ansible|
-  #       ansible.verbose = "v"
-  #       ansible.playbook = "install-k8s-playbook.yaml"
-  #     end
-  #   end
-  # end
+  (1..N).each do |i|
+    config.vm.define "node-#{i}" do |node|
+      node.vm.hostname = "c1-node#{i}"
+      node.vm.network "private_network", ip: "#{NETWORK}#{i}"
+      node.vm.provision :ansible do |ansible|
+        ansible.verbose = "v"
+        ansible.playbook = "node-pre-flight.yaml"
+      end
+      node.vm.provision :ansible do |ansible|
+        ansible.verbose = "v"
+        ansible.playbook = "node-install-configure-cri.yaml"
+      end
+      node.vm.provision :ansible do |ansible|
+        ansible.verbose = "v"
+        ansible.playbook = "node-install-configure-k8s.yaml"
+      end
+    end
+  end
 end

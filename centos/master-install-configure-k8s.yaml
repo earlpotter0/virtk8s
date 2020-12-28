@@ -60,8 +60,15 @@
       group: vagrant
       mode: '0644'
 
-  - name: install cni
+  - name: Install CNI
     become: yes
     become_user: vagrant
     command: kubectl apply -f /vagrant/calico.yaml
     
+  - name: Create join command
+    command: kubeadm token create --print-join-command
+    register: join_command
+
+  - name: Copy join command to vagrant dir
+    become: false
+    local_action: copy content="{{ join_command.stdout_lines[0] }}" dest="./join-command"

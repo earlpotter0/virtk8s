@@ -1,0 +1,38 @@
+---
+- hosts: all
+
+  tasks:
+  
+  - name: Setup K8s repo
+    become: yes
+    copy:
+      src: kubernetes.repo
+      dest: /etc/yum.repos.d/kubernetes.repo
+      owner: root
+      group: root
+      mode: 0644
+
+  - name: Install k8s
+    become: yes
+    dnf:
+      name: 
+        - kubelet
+        - kubeadm
+        - kubectl
+      disable_excludes: all
+  
+  - name: Enable Kubelet in systemd
+    become: yes
+    systemd:
+      name: kubelet
+      enabled: yes
+      state: started
+      masked: no
+
+  - name: Copy the join command to server location
+    become: yes
+    copy: src=join-command dest=/tmp/join-command.sh mode=0777
+
+  - name: Join the node to cluster
+    become: yes
+    command: sh /tmp/join-command.sh
