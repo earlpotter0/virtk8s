@@ -19,15 +19,23 @@ Vagrant.configure("2") do |config|
     master.vm.network "private_network", ip: "#{NETWORK}0"
     master.vm.provision :ansible do |ansible|
       ansible.verbose = "v"
-      ansible.playbook = "master-pre-flight.yaml"
+      ansible.playbook = "pre-flight.yaml"
     end
     master.vm.provision :ansible do |ansible|
       ansible.verbose = "v"
-      ansible.playbook = "master-install-configure-cri.yaml"
+      ansible.playbook = "master-firewall-config.yaml"
     end
     master.vm.provision :ansible do |ansible|
       ansible.verbose = "v"
-      ansible.playbook = "master-install-configure-k8s.yaml"
+      ansible.playbook = "install-configure-cri.yaml"
+    end
+    master.vm.provision :ansible do |ansible|
+      ansible.verbose = "v"
+      ansible.playbook = "install-k8s.yaml"
+    end
+    master.vm.provision :ansible do |ansible|
+      ansible.verbose = "v"
+      ansible.playbook = "master-config-k8s.yaml"
     end
   end
 
@@ -37,15 +45,23 @@ Vagrant.configure("2") do |config|
       node.vm.network "private_network", ip: "#{NETWORK}#{i}"
       node.vm.provision :ansible do |ansible|
         ansible.verbose = "v"
-        ansible.playbook = "node-pre-flight.yaml"
+        ansible.playbook = "pre-flight.yaml"
       end
       node.vm.provision :ansible do |ansible|
         ansible.verbose = "v"
-        ansible.playbook = "node-install-configure-cri.yaml"
+        ansible.playbook = "node-firewall-config.yaml"
       end
       node.vm.provision :ansible do |ansible|
         ansible.verbose = "v"
-        ansible.playbook = "node-install-configure-k8s.yaml"
+        ansible.playbook = "install-configure-cri.yaml"
+      end
+      node.vm.provision :ansible do |ansible|
+        ansible.verbose = "v"
+        ansible.playbook = "install-k8s.yaml"
+      end
+      node.vm.provision :ansible do |ansible|
+        ansible.verbose = "v"
+        ansible.playbook = "node-config-k8s.yaml"
       end
     end
   end

@@ -54,24 +54,6 @@
       state: present
       reload: yes
 
-  - name: Configure firewall - 10250
-    ansible.posix.firewalld:
-      port: 10250/tcp
-      permanent: yes
-      state: enabled
-
-  - name: Configure firewall - 30000-32767
-    ansible.posix.firewalld:
-      port: 30000-32676/tcp
-      permanent: yes
-      state: enabled
-
-  - name: Enable firewall
-    systemd:
-      name: firewalld
-      state: started
-      enabled: yes
-
   - name: Enable EPEL
     dnf: 
       name: epel-release

@@ -1,0 +1,29 @@
+---
+- hosts: all
+  become: yes
+
+  tasks:
+  
+  - name: Configure firewall - 6443
+    ansible.posix.firewalld:
+      port: 6443/tcp
+      permanent: yes
+      state: enabled
+
+  - name: Configure firewall - 2379-2380
+    ansible.posix.firewalld:
+      port: 2379-2380/tcp
+      permanent: yes
+      state: enabled      
+
+  - name: Configure firewall - 10250-10252
+    ansible.posix.firewalld:
+      port: 10250-10252/tcp
+      permanent: yes
+      state: enabled
+
+  - name: Enable firewall
+    systemd:
+      name: firewalld
+      state: started
+      enabled: yes
