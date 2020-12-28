@@ -5,9 +5,9 @@ In this project, currently CentOS is working.  Ubuntu is not.
 
 # Platform and Requirements
 Mac OS
-    - Virtualbox
-    - Vagrant
-    - Ansible
+  - Virtualbox
+  - Vagrant
+  - Ansible
 
 # Distructions
   - Clone
