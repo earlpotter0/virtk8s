@@ -66,6 +66,8 @@
         - device-mapper-persistent-data
         - lvm2
         - vim
+        - curl
+        - jq
       state: present
 
   - name: Add vagrant user to wheel
