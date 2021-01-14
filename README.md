@@ -11,5 +11,5 @@ Mac OS
 
 # Distructions
   - Clone
-  - cd to dir
+  - cd to dir (centos is working.  ubuntu is not yet.)
   - Run vagrant up
